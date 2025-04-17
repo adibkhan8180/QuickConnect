@@ -68,3 +68,32 @@ app.post('/login', async (req, res) => {
     res.status(500).json({message: 'Error loggin In'});
   }
 });
+
+app.get('/users/:userId', async (req, res) => {
+  try {
+    const userId = req.params.userId;
+    const users = await User.find({_id: {$ne: userId}});
+
+    res.json(users);
+  } catch (error) {
+    console.log('Error', error);
+  }
+});
+
+app.post('/sendrequest', async (req, res) => {
+  const {senderId, receiverId, message} = req.body;
+
+  console.log(senderId);
+  console.log(receiverId);
+  console.log(message);
+
+  const receiver = await User.findById(receiverId);
+  if (!receiver) {
+    return res.status(404).json({message: 'Receiver not found'});
+  }
+
+  receiver.requests.push({from: senderId, message});
+  await receiver.save();
+
+  res.status(200).json({message: 'Request sent succesfully'});
+});
