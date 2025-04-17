@@ -13,6 +13,7 @@ import {
 import React, {useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
 import axios from 'axios';
+import { BASE_URL } from '../store/constant';
 
 const RegisterScreen = () => {
   const navigation = useNavigation();
@@ -30,7 +31,7 @@ const RegisterScreen = () => {
     };
 
     axios
-      .post('http://192.168.1.92:4000/register', user)
+      .post(`${BASE_URL}/register`, user)
     .then(response => {
         console.log(response);
         Alert.alert(

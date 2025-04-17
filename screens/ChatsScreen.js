@@ -17,6 +17,7 @@ import {useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {jwtDecode} from 'jwt-decode';
 import axios from 'axios';
+import { BASE_URL } from '../store/constant';
 // import Chat from '../components/Chat';
 
 const ChatsScreen = () => {
@@ -69,7 +70,7 @@ const ChatsScreen = () => {
   const getrequests = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:4000/getrequests/${userId}`,
+        `${BASE_URL}/getrequests/${userId}`,
       );
 
       setRequests(response.data);
@@ -80,7 +81,7 @@ const ChatsScreen = () => {
   console.log(requests);
   const acceptRequest = async requestId => {
     try {
-      const response = await axios.post('http://localhost:4000/acceptrequest', {
+      const response = await axios.post(`${BASE_URL}/acceptrequest`, {
         userId: userId,
         requestId: requestId,
       });
@@ -94,7 +95,7 @@ const ChatsScreen = () => {
   };
   const getUser = async () => {
     try {
-      const response = await axios.get(`http://localhost:4000/user/${userId}`);
+      const response = await axios.get(`${BASE_URL}/user/${userId}`);
       setChats(response.data);
     } catch (error) {
       console.log('Error fetching user', error);
