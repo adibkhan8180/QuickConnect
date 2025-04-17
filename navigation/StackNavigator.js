@@ -1,5 +1,5 @@
 import {StyleSheet} from 'react-native';
-import React from 'react';
+import React, {useContext, useEffect} from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import ChatsScreen from '../screens/ChatsScreen';
@@ -10,11 +10,24 @@ import LoginScreen from '../screens/LoginScreen';
 import RegisterScreen from '../screens/RegisterScreen';
 import PeopleScreen from '../screens/PeopleScreen';
 import {NavigationContainer} from '@react-navigation/native';
+import {AuthContext} from '../AuthContext';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const StackNavigator = () => {
   const Stack = createNativeStackNavigator();
   const Tab = createBottomTabNavigator();
+  const {token, setToken} = useContext(AuthContext);
+  console.log('token value', token);
+  useEffect(() => {
+    const fetchUser = async () => {
+      const token = await AsyncStorage.getItem('authToken');
+      console.log('token from context', token);
+    };
 
+    fetchUser();
+  }, []);
+
+  console.log('token', token);
   function BottomTabs() {
     return (
       <Tab.Navigator>
@@ -92,10 +105,9 @@ const StackNavigator = () => {
       </Stack.Navigator>
     );
   }
-
   return (
     <NavigationContainer>
-      <AuthStack />
+      {token === null || token === '' ? <AuthStack /> : <MainStack />}
     </NavigationContainer>
   );
 };

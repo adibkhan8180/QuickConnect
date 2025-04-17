@@ -11,12 +11,34 @@ import {
 } from 'react-native';
 import React, {useContext, useEffect, useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {AuthContext} from '../AuthContext';
+import axios from 'axios';
 
 const LoginScreen = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const navigation = useNavigation();
 
+  const {token, setToken} = useContext(AuthContext);
+  useEffect(() => {
+    if (token) {
+      navigation.replace('MainStack', {screen: 'Main'});
+    }
+  }, [token, navigation]);
+  const handleLogin = () => {
+    const user = {
+      email: email,
+      password: password,
+    };
+
+    axios.post('http://192.168.1.92:4000/login', user).then(response => {
+      const token = response.data.token;
+      console.log('token', token);
+      AsyncStorage.setItem('authToken', token);
+      setToken(token);
+    });
+  };
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: 'white'}}>
       <View style={{padding: 10, alignItems: 'center'}}>
@@ -85,6 +107,7 @@ const LoginScreen = () => {
             </View>
 
             <Pressable
+              onPress={handleLogin}
               style={{
                 width: 200,
                 backgroundColor: '#4A55A2',
