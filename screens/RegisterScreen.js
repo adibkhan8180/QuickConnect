@@ -11,12 +11,44 @@ import {
   View,
 } from 'react-native';
 import React, {useState} from 'react';
+import {useNavigation} from '@react-navigation/native';
+import axios from 'axios';
 
 const RegisterScreen = () => {
+  const navigation = useNavigation();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [image, setImage] = useState('');
   const [name, setName] = useState('');
+
+  const handleRegister = () => {
+    const user = {
+      name: name,
+      email: email,
+      password: password,
+      image: image,
+    };
+
+    axios
+      .post('http://192.168.1.92:4000/register', user)
+    .then(response => {
+        console.log(response);
+        Alert.alert(
+          'Registration succesfull',
+          'You have been registered succesfully!',
+        );
+        setName('');
+        setEmail('');
+        setPassword('');
+        setImage('');
+      })
+      .catch(error => {
+        Alert.alert(
+          'Registration error',
+          'An error ocurred while registering!',
+        );
+      });
+  };
 
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: 'white'}}>
@@ -170,6 +202,7 @@ const RegisterScreen = () => {
             </View>
 
             <Pressable
+              onPress={handleRegister}
               style={{
                 width: 200,
                 backgroundColor: '#4A55A2',
