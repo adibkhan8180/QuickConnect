@@ -17,8 +17,8 @@ import {useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {jwtDecode} from 'jwt-decode';
 import axios from 'axios';
-import { BASE_URL } from '../store/constant';
-// import Chat from '../components/Chat';
+import {BASE_URL} from '../store/constant';
+import Chat from '../components/Chat';
 
 const ChatsScreen = () => {
   const [options, setOptions] = useState(['Chats']);
@@ -69,10 +69,7 @@ const ChatsScreen = () => {
   }, [userId]);
   const getrequests = async () => {
     try {
-      const response = await axios.get(
-        `${BASE_URL}/getrequests/${userId}`,
-      );
-
+      const response = await axios.get(`${BASE_URL}/getrequests/${userId}`);
       setRequests(response.data);
     } catch (error) {
       console.log('error', error);
@@ -105,7 +102,7 @@ const ChatsScreen = () => {
 
   console.log('users', chats);
   return (
-    <SafeAreaView style={{flex:1,backgroundColor:"white"}}>
+    <SafeAreaView style={{flex: 1, backgroundColor: 'white'}}>
       <View
         style={{
           padding: 10,
@@ -127,7 +124,7 @@ const ChatsScreen = () => {
 
         <View>
           <View style={{flexDirection: 'row', alignItems: 'center', gap: 10}}>
-            <AntDesign name="camerao" size={26} color="black" />
+            <AntDesign name="camera" size={26} color="black" />
             <MaterialIcons
               onPress={() => navigation.navigate('People')}
               name="person-outline"
