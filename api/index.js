@@ -158,3 +158,20 @@ app.post('/acceptrequest', async (req, res) => {
     res.status(500).json({message: 'Server Error'});
   }
 });
+
+app.get('/user/:userId', async (req, res) => {
+  try {
+    const userId = req.params.userId;
+
+    
+    const users = await User.findById(userId).populate(
+      'friends',
+      'name email image',
+    );
+    console.log('hello', users);
+
+    res.json(users.friends);
+  } catch (error) {
+    console.log('Error fetching user', error);
+  }
+});
