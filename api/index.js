@@ -168,7 +168,6 @@ app.get('/user/:userId', async (req, res) => {
       'friends',
       'name email image',
     );
-    console.log('hello', users);
 
     res.json(users.friends);
   } catch (error) {
@@ -218,4 +217,48 @@ io.on('connection', socket => {
 
 http.listen(socketPort, () => {
   console.log(`Socket.IO running on port ${socketPort}`);
+});
+
+app.post('/sendMessage', async (req, res) => {
+  try {
+    const {senderId, receiverId, message} = req.body;
+
+    const newMessage = new Message({
+      senderId,
+      receiverId,
+      message,
+    });
+
+    await newMessage.save();
+
+    const receiverSocketId = userSocketMap[receiverId];
+
+    if (receiverSocketId) {
+      console.log('emitting recieveMessage event to the reciver', receiverId);
+      io.to(receiverSocketId).emit('newMessage', newMessage);
+    } else {
+      console.log('Receiver socket ID not found');
+    }
+
+    res.status(201).json(newMessage);
+  } catch (error) {
+    console.log('ERROR', error);
+  }
+});
+
+app.get('/messages', async (req, res) => {
+  try {
+    const {senderId, receiverId} = req.query;
+
+    const messages = await Message.find({
+      $or: [
+        {senderId: senderId, receiverId: receiverId},
+        {senderId: receiverId, receiverId: senderId},
+      ],
+    }).populate('senderId', '_id name');
+
+    res.status(200).json(messages);
+  } catch (error) {
+    console.log('Error', error);
+  }
 });
