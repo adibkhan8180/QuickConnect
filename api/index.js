@@ -5,6 +5,7 @@ const crypto = require('crypto');
 
 const app = express();
 const port = 4000;
+const socketPort = 3000;
 const cors = require('cors');
 app.use(cors());
 
@@ -163,7 +164,6 @@ app.get('/user/:userId', async (req, res) => {
   try {
     const userId = req.params.userId;
 
-    
     const users = await User.findById(userId).populate(
       'friends',
       'name email image',
@@ -174,4 +174,48 @@ app.get('/user/:userId', async (req, res) => {
   } catch (error) {
     console.log('Error fetching user', error);
   }
+});
+
+const http = require('http').createServer(app);
+
+const io = require('socket.io')(http);
+
+//{"userId" : "socket ID"}
+
+const userSocketMap = {};
+
+io.on('connection', socket => {
+  console.log('a user is connected', socket.id);
+
+  const userId = socket.handshake.query.userId;
+
+  console.log('userid', userId);
+
+  if (userId !== 'undefined') {
+    userSocketMap[userId] = socket.id;
+  }
+
+  console.log('user socket data', userSocketMap);
+
+  socket.on('disconnect', () => {
+    console.log('user disconnected', socket.id);
+    delete userSocketMap[userId];
+  });
+
+  socket.on('sendMessage', ({senderId, receiverId, message}) => {
+    const receiverSocketId = userSocketMap[receiverId];
+
+    console.log('receiver Id', receiverId);
+
+    if (receiverSocketId) {
+      io.to(receiverSocketId).emit('receiveMessage', {
+        senderId,
+        message,
+      });
+    }
+  });
+});
+
+http.listen(socketPort, () => {
+  console.log(`Socket.IO running on port ${socketPort}`);
 });
