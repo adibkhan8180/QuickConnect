@@ -3,7 +3,6 @@ import React, {useContext, useEffect} from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import ChatsScreen from '../screens/ChatsScreen';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import ProfileScreen from '../screens/ProfileScreen';
 import LoginScreen from '../screens/LoginScreen';
@@ -41,14 +40,14 @@ const StackNavigator = () => {
             headerShown: false,
             tabBarIcon: ({focused}) =>
               focused ? (
-                <MaterialIcons
-                  name="chat-bubble-outline"
+                <Ionicons
+                  name="chatbox-outline"
                   size={30}
                   color="white"
                 />
               ) : (
-                <MaterialIcons
-                  name="chat-bubble-outline"
+                <Ionicons
+                  name="chatbox-outline"
                   size={30}
                   color="#989898"
                 />

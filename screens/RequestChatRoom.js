@@ -12,8 +12,6 @@ import React, {useContext, useLayoutEffect, useState} from 'react';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import {AuthContext} from '../AuthContext';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import Entypo from 'react-native-vector-icons/Entypo';
-import Feather from 'react-native-vector-icons/Feather';
 import axios from 'axios';
 import {BASE_URL} from '../store/constant';
 
@@ -27,7 +25,9 @@ const RequestChatRoom = () => {
       headerTitle: '',
       headerLeft: () => (
         <View style={{flexDirection: 'row', alignItems: 'center', gap: 10}}>
-          <Ionicons name="arrow-back" size={24} color="black" />
+          <TouchableOpacity onPress={() => navigation.goBack()}>
+            <Ionicons name="arrow-back" size={24} color="black" />
+          </TouchableOpacity>
           <View>
             <Text>{route?.params?.name}</Text>
           </View>
@@ -72,7 +72,7 @@ const RequestChatRoom = () => {
           borderTopColor: '#dddddd',
           marginBottom: 20,
         }}>
-        <Entypo name="emoji-happy" size={24} color="gray" />
+        <Ionicons name="happy-outline" size={24} color="gray" />
 
         <TextInput
           placeholder="type your message..."
@@ -96,9 +96,9 @@ const RequestChatRoom = () => {
             gap: 8,
             marginHorizontal: 8,
           }}>
-          <Entypo name="camera" size={24} color="gray" />
+          <Ionicons name="camera-outline" size={24} color="gray" />
 
-          <Feather name="mic" size={24} color="gray" />
+          <Ionicons name="mic-outline" size={24} color="gray" />
         </View>
 
         <Pressable

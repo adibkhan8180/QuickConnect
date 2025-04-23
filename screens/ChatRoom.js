@@ -5,14 +5,13 @@ import {
   Text,
   TextInput,
   View,
+  TouchableOpacity,
   KeyboardAvoidingView,
 } from 'react-native';
 import React, {useContext, useEffect, useLayoutEffect, useState} from 'react';
 import {AuthContext} from '../AuthContext';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import Entypo from 'react-native-vector-icons/Entypo';
-import Feather from 'react-native-vector-icons/Feather';
 import axios from 'axios';
 import {useSocketContext} from '../SocketContext';
 import {BASE_URL} from '../store/constant';
@@ -29,7 +28,9 @@ const ChatRoom = () => {
       headerTitle: '',
       headerLeft: () => (
         <View style={{flexDirection: 'row', alignItems: 'center', gap: 10}}>
-          <Ionicons name="arrow-back" size={24} color="black" />
+          <TouchableOpacity onPress={() => navigation.goBack()}>
+            <Ionicons name="arrow-back" size={24} color="black" />
+          </TouchableOpacity>
           <View>
             <Text>{route?.params?.name}</Text>
           </View>
@@ -145,10 +146,10 @@ const ChatRoom = () => {
           borderTopColor: '#dddddd',
           marginBottom: 20,
         }}>
-        <Entypo name="emoji-happy" size={24} color="gray" />
+        <Ionicons name="happy-outline" size={24} color="gray" />
 
         <TextInput
-          placeholder="type your message..."
+          placeholder="Type your message..."
           value={message}
           onChangeText={setMessage}
           style={{
@@ -169,9 +170,9 @@ const ChatRoom = () => {
             gap: 8,
             marginHorizontal: 8,
           }}>
-          <Entypo name="camera" size={24} color="gray" />
+          <Ionicons name="camera-outline" size={24} color="gray" />
 
-          <Feather name="mic" size={24} color="gray" />
+          <Ionicons name="mic-outline" size={24} color="gray" />
         </View>
 
         <Pressable

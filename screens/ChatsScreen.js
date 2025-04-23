@@ -8,11 +8,8 @@ import {
 } from 'react-native';
 import React, {useContext, useState, useEffect} from 'react';
 import {AuthContext} from '../AuthContext';
-import AntDesign from 'react-native-vector-icons/AntDesign';
-import Entypo from 'react-native-vector-icons/Entypo';
 import 'core-js/stable/atob';
-
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import {useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {jwtDecode} from 'jwt-decode';
@@ -124,12 +121,12 @@ const ChatsScreen = () => {
 
         <View>
           <View style={{flexDirection: 'row', alignItems: 'center', gap: 10}}>
-            <AntDesign name="camera" size={26} color="black" />
-            <MaterialIcons
+            <Ionicons name="camera" size={24} color="gray" />
+            <Ionicons
               onPress={() => navigation.navigate('People')}
-              name="person-outline"
-              size={26}
-              color="black"
+              name="people-outline"
+              size={24}
+              color="gray"
             />
           </View>
         </View>
@@ -146,7 +143,7 @@ const ChatsScreen = () => {
           <View>
             <Text>Chats</Text>
           </View>
-          <Entypo name="chevron-small-down" size={26} color="black" />
+          <Ionicons name="chevron-down-outline" size={26} color="black" />
         </Pressable>
 
         <View>
@@ -186,7 +183,7 @@ const ChatsScreen = () => {
           <View>
             <Text>Requests</Text>
           </View>
-          <Entypo name="chevron-small-down" size={26} color="black" />
+          <Ionicons name="chevron-down-outline" size={26} color="black" />
         </Pressable>
 
         <View style={{marginVertical: 12}}>
@@ -239,7 +236,7 @@ const ChatsScreen = () => {
                       </Text>
                     </Pressable>
 
-                    <AntDesign name="delete" size={26} color="red" />
+                    <Ionicons name="trash-outline" size={26} color="red" />
                   </View>
                 </Pressable>
               ))}
