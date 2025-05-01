@@ -8,7 +8,13 @@ import {
   TouchableOpacity,
   KeyboardAvoidingView,
 } from 'react-native';
-import React, {useContext, useEffect, useLayoutEffect, useState} from 'react';
+import React, {
+  useContext,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from 'react';
 import {AuthContext} from '../AuthContext';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -22,6 +28,12 @@ const ChatRoom = () => {
   const [messages, setMessages] = useState([]);
   const {token, userId, setToken, setUserId} = useContext(AuthContext);
   const {socket} = useSocketContext();
+  const scrollViewRef = useRef();
+
+  useEffect(() => {
+    scrollViewRef.current?.scrollToEnd({animated: true});
+  }, [messages]);
+
   const route = useRoute();
   useLayoutEffect(() => {
     return navigation.setOptions({
@@ -95,44 +107,48 @@ const ChatRoom = () => {
   };
   return (
     <KeyboardAvoidingView style={{flex: 1, backgroundColor: 'white'}}>
-      <ScrollView>
-        {messages?.map((item, index) => {
-          return (
-            <Pressable
-              style={[
-                item?.senderId?._id === userId
-                  ? {
-                      alignSelf: 'flex-end',
-                      backgroundColor: '#DCF8C6',
-                      padding: 8,
-                      maxWidth: '60%',
-                      borderRadius: 7,
-                      margin: 10,
-                    }
-                  : {
-                      alignSelf: 'flex-start',
-                      backgroundColor: 'white',
-                      padding: 8,
-                      margin: 10,
-                      borderRadius: 7,
-                      maxWidth: '60%',
-                    },
-              ]}>
-              <Text style={{fontSize: 13, textAlign: 'left'}}>
-                {item?.message}
-              </Text>
-              <Text
-                style={{
-                  textAlign: 'right',
-                  fontSize: 9,
-                  color: 'gray',
-                  marginTop: 4,
-                }}>
-                {formatTime(item?.timeStamp)}
-              </Text>
-            </Pressable>
-          );
-        })}
+      <ScrollView
+        ref={scrollViewRef}
+        keyboardShouldPersistTaps="handled"
+        onContentSizeChange={() =>
+          scrollViewRef.current?.scrollToEnd({animated: true})
+        }>
+        {messages?.map((item, index) => (
+          <Pressable
+            key={index}
+            style={[
+              item?.senderId?._id === userId
+                ? {
+                    alignSelf: 'flex-end',
+                    backgroundColor: '#DCF8C6',
+                    padding: 8,
+                    maxWidth: '60%',
+                    borderRadius: 7,
+                    margin: 10,
+                  }
+                : {
+                    alignSelf: 'flex-start',
+                    backgroundColor: 'white',
+                    padding: 8,
+                    margin: 10,
+                    borderRadius: 7,
+                    maxWidth: '60%',
+                  },
+            ]}>
+            <Text style={{fontSize: 13, textAlign: 'left'}}>
+              {item?.message}
+            </Text>
+            <Text
+              style={{
+                textAlign: 'right',
+                fontSize: 9,
+                color: 'gray',
+                marginTop: 4,
+              }}>
+              {formatTime(item?.timeStamp)}
+            </Text>
+          </Pressable>
+        ))}
       </ScrollView>
 
       <View
@@ -176,7 +192,9 @@ const ChatRoom = () => {
         </View>
 
         <Pressable
-          onPress={() => sendMessage(userId, route?.params?.receiverId)}
+          onPress={() =>
+            message && sendMessage(userId, route?.params?.receiverId)
+          }
           style={{
             backgroundColor: '#0066b2',
             paddingHorizontal: 12,

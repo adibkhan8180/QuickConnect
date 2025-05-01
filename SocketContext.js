@@ -1,42 +1,43 @@
 import {createContext, useContext, useEffect, useState} from 'react';
 import io from 'socket.io-client';
 import {AuthContext} from './AuthContext';
-import { SOCKET_URL } from './store/constant';
+import {SOCKET_URL} from './store/constant';
 
 const SocketContext = createContext();
 
-export const useSocketContext = () => {
-  return useContext(SocketContext);
-};
+export const useSocketContext = () => useContext(SocketContext);
 
 export const SocketContextProvider = ({children}) => {
   const [socket, setSocket] = useState(null);
   const {authUser, userId} = useContext(AuthContext);
 
-  console.log('auth', authUser)
-  console.log('BABE', authUser);
   useEffect(() => {
-    if (authUser) {
-      const socket = io(SOCKET_URL, {
-        query: {
-          userId: userId,
-        },
+    if (authUser && userId) {
+      const socketInstance = io(SOCKET_URL, {
+        query: {userId},
+        transports: ['websocket'],
       });
 
-      setSocket(socket);
+      setSocket(socketInstance);
 
-      return () => socket.close();
+      socketInstance.on('connect', () => {
+        console.log('Socket connected:', socketInstance.id);
+      });
+
+      socketInstance.on('disconnect', () => {
+        console.log('Socket disconnected');
+      });
+
+      return () => socketInstance.disconnect();
     } else {
       if (socket) {
-        socket.close();
+        socket.disconnect();
         setSocket(null);
       }
     }
-  }, []);
+  }, [authUser, userId]);
 
   return (
-    <SocketContext.Provider value={{socket, setSocket}}>
-      {children}
-    </SocketContext.Provider>
+    <SocketContext.Provider value={{socket}}>{children}</SocketContext.Provider>
   );
 };
