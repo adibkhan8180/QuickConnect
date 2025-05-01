@@ -204,7 +204,7 @@ io.on('connection', socket => {
   socket.on('sendMessage', ({senderId, receiverId, message}) => {
     const receiverSocketId = userSocketMap[receiverId];
 
-    console.log('receiver Id', receiverId);
+    console.log('emitting recieveMessage event', senderId, receiverId, message);
 
     if (receiverSocketId) {
       io.to(receiverSocketId).emit('receiveMessage', {
