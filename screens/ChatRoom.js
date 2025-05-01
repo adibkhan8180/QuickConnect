@@ -164,9 +164,10 @@ const ChatRoom = () => {
             flexDirection: 'row',
             alignItems: 'center',
             paddingHorizontal: 10,
-            paddingVertical: 10,
+            paddingTop: 10,
             borderTopWidth: 1,
             borderTopColor: '#dddddd',
+            paddingBottom: 25,
           }}>
           <Ionicons name="happy-outline" size={24} color="gray" />
 
