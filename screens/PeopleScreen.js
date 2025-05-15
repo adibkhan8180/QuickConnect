@@ -33,7 +33,7 @@ const PeopleScreen = () => {
             fontWeight: '500',
             marginTop: 12,
           }}>
-          People using signal
+          People using Quick Connect
         </Text>
       </View>
       <FlatList
